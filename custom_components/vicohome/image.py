@@ -32,7 +32,7 @@ class VicoHomeImage(CoordinatorEntity, ImageEntity):
 
     def __init__(self, coordinator: VicoHomeCoordinator):
         CoordinatorEntity.__init__(self, coordinator)
-        ImageEntity.__init__(self)
+        ImageEntity.__init__(self, coordinator.hass)
         self._attr_unique_id = f"{coordinator.email}_image"
         self._attr_name = "VicoHome Letztes Bild"
         self._attr_device_info = _device_info(coordinator)
