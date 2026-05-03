@@ -3,6 +3,8 @@
 import aiohttp
 import logging
 from datetime import datetime, timezone, timedelta
+from pathlib import Path
+import json
 
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
@@ -15,6 +17,27 @@ from .const import (
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+
+async def _async_load_cached_serial(hass: HomeAssistant) -> str | None:
+    """Load cached serial number from persistent storage (async-safe)."""
+    path = Path(hass.config.config_dir) / ".storage" / "vicohome_serial.json"
+    if not path.exists():
+        return None
+    try:
+        data = await hass.async_add_executor_job(lambda: json.loads(path.read_text()))
+        return data.get("serial")
+    except Exception:
+        return None
+
+
+async def _async_save_cached_serial(hass: HomeAssistant, serial: str) -> None:
+    """Save serial number to persistent storage (async-safe)."""
+    path = Path(hass.config.config_dir) / ".storage" / "vicohome_serial.json"
+    try:
+        await hass.async_add_executor_job(lambda: path.write_text(json.dumps({"serial": serial})))
+    except Exception as err:
+        _LOGGER.debug("Could not save cached serial: %s", err)
 
 
 class VicoHomeCoordinator(DataUpdateCoordinator):
@@ -36,6 +59,7 @@ class VicoHomeCoordinator(DataUpdateCoordinator):
         self.base_url = f"https://api-{self.region}.vicohome.io"
         self._token: str | None = None
         self._last_notified_trace_id: str | None = None
+        self._cached_serial: str | None = None  # Will be loaded async in first update
 
         super().__init__(
             hass,
@@ -45,12 +69,50 @@ class VicoHomeCoordinator(DataUpdateCoordinator):
         )
 
     async def _async_update_data(self):
-        """Fetch events from VicoHome API."""
+        """Fetch events and device details from VicoHome API."""
         if not self._token:
             await self._async_login()
+        
+        # Load cached serial on first run (async-safe)
+        if self._cached_serial is None:
+            self._cached_serial = await _async_load_cached_serial(self.hass)
+            if self._cached_serial:
+                _LOGGER.debug("Loaded cached serial from storage: %s", self._cached_serial)
 
-        events = await self._async_fetch_events()
+        try:
+            events = await self._async_fetch_events()
+        except UpdateFailed as err:
+            msg = str(err).lower()
+            # If kicked or token invalid, force re-login and retry once
+            if "kicked" in msg or "token" in msg or "auth" in msg:
+                _LOGGER.debug("Token invalidated (%s), forcing re-login and retry", err)
+                self._token = None
+                await self._async_login()
+                events = await self._async_fetch_events()
+            else:
+                raise
+
         now = datetime.now(timezone.utc)
+
+        # Extract serial number from events and persist it
+        serial = None
+        if events:
+            serial = events[0].get("serialNumber")
+            if serial and serial != self._cached_serial:
+                self._cached_serial = serial
+                await _async_save_cached_serial(self.hass, serial)
+                _LOGGER.debug("Cached new serial from events: %s", serial)
+        
+        # Fallback to cached serial if no events and we have one stored
+        if not serial:
+            serial = self._cached_serial
+            if serial:
+                _LOGGER.debug("Using cached serial (no recent events): %s", serial)
+        
+        # Fetch device details if we have a serial
+        device_details = {}
+        if serial:
+            device_details = await self._async_fetch_device_details(serial)
 
         # Send Telegram notification for new events
         if events and self.notifications_enabled and self.telegram_bot_token and self.telegram_chat_id:
@@ -64,6 +126,8 @@ class VicoHomeCoordinator(DataUpdateCoordinator):
             "events": events,
             "last_update": now,
             "event_count": len(events),
+            "device_details": device_details,
+            "serial_number": serial,
         }
 
     async def _async_login(self) -> None:
@@ -111,6 +175,29 @@ class VicoHomeCoordinator(DataUpdateCoordinator):
                     self._token = None
                     raise UpdateFailed(f"Event fetch failed: {data.get('msg')}")
                 return data.get("data", {}).get("list", [])
+
+    async def _async_fetch_device_details(self, serial: str) -> dict:
+        """Fetch device details by serial number."""
+        _LOGGER.debug("Fetching device details for serial: %s", serial)
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                f"{self.base_url}/device/selectsingledevice",
+                json={"serialNumber": serial},
+                headers={
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": self._token,
+                },
+                timeout=aiohttp.ClientTimeout(total=30),
+            ) as resp:
+                data = await resp.json()
+                _LOGGER.debug("Device details raw response: %s", data)
+                if data.get("result") != 0:
+                    _LOGGER.warning("Device details fetch failed: %s", data.get('msg'))
+                    return {}
+                dd = data.get("data", {})
+                _LOGGER.debug("Device details keys: %s", list(dd.keys()) if isinstance(dd, dict) else "not dict")
+                return dd
 
     async def _async_send_telegram(self, event: dict) -> None:
         """Send Telegram notification for a new event."""
