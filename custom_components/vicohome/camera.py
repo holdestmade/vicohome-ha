@@ -32,8 +32,9 @@ class VicoHomeCamera(CoordinatorEntity, Camera):
     """Camera entity showing the latest event snapshot."""
 
     def __init__(self, coordinator: VicoHomeCoordinator):
-        CoordinatorEntity.__init__(self, coordinator)
+        super().__init__(coordinator)
         Camera.__init__(self)
+        self._webrtc_provider = None
         self._attr_unique_id = f"{coordinator.email}_camera"
         self._attr_name = "VicoHome Camera"
         self._attr_is_streaming = False
