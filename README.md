@@ -1,3 +1,5 @@
+![VicoHome Banner](custom_components/vicohome/brand/banner.png)
+
 ## VicoHome for Home Assistant
 
 Custom integration for **VicoHome CG1** cloud cameras in Home Assistant.
