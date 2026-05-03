@@ -6,13 +6,12 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.helpers.device_registry import DeviceInfo, DeviceEntryType
-import aiohttp
 
 from .const import DOMAIN
 from .coordinator import VicoHomeCoordinator
 
 
-def _device_info(coordinator: VicoHomeCoordinator) -> DeviceInfo:
+def _device_info(coordinator: VicoHomeCoordinator):
     return DeviceInfo(
         identifiers={(DOMAIN, coordinator.email)},
         name=f"VicoHome ({coordinator.email})",
@@ -22,7 +21,7 @@ def _device_info(coordinator: VicoHomeCoordinator) -> DeviceInfo:
     )
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback) -> None:
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback):
     """Set up VicoHome image entity."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
     async_add_entities([VicoHomeImage(coordinator)])
@@ -32,32 +31,37 @@ class VicoHomeImage(CoordinatorEntity, ImageEntity):
     """Image entity showing the latest event snapshot directly in HA."""
 
     def __init__(self, coordinator: VicoHomeCoordinator):
-        super().__init__(coordinator)
+        CoordinatorEntity.__init__(self, coordinator)
+        ImageEntity.__init__(self)
         self._attr_unique_id = f"{coordinator.email}_image"
         self._attr_name = "VicoHome Letztes Bild"
         self._attr_device_info = _device_info(coordinator)
+        self._attr_content_type = "image/jpeg"
 
     @property
-    def available(self) -> bool:
-        """Return True if there are events to display."""
-        return self.coordinator.last_update_success and bool(self.coordinator.data.get("events"))
+    def available(self):
+        events = self.coordinator.data.get("events", [])
+        if not events:
+            return False
+        return bool(events[0].get("imageUrl"))
 
     @property
-    def image_last_updated(self):
-        """Return timestamp of last update."""
-        return self.coordinator.data.get("last_update")
-
-    async def async_image(self) -> bytes | None:
-        """Fetch and return the latest event snapshot image."""
+    def image_url(self):
+        """Return direct URL for HA to display."""
         events = self.coordinator.data.get("events", [])
         if not events:
             return None
-        image_url = events[0].get("imageUrl")
-        if not image_url:
+        return events[0].get("imageUrl")
+
+    async def async_image(self):
+        """Fetch latest event snapshot."""
+        import aiohttp
+        url = self.image_url
+        if not url:
             return None
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.get(image_url, timeout=aiohttp.ClientTimeout(total=30)) as resp:
+                async with session.get(url, timeout=aiohttp.ClientTimeout(total=30)) as resp:
                     return await resp.read()
         except Exception:
             return None

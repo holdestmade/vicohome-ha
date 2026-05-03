@@ -14,4 +14,4 @@ CONF_TELEGRAM_CHAT = "telegram_chat_id"
 DEFAULT_REGION = "eu"
 DEFAULT_POLLING_INTERVAL = 180  # seconds (3 minutes)
 
-PLATFORMS = ["sensor", "binary_sensor", "camera", "switch", "number", "text", "image", "button"]
+PLATFORMS = ["sensor", "binary_sensor", "camera", "switch", "number", "text"]
