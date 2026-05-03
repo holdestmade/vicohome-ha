@@ -1,0 +1,19 @@
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Ignore local dev files
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Ignore IDE
+.vscode/
+.idea/
+
+# Ignore git
+.git/

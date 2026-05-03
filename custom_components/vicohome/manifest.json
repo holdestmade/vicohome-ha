@@ -1,0 +1,13 @@
+{
+  "domain": "vicohome",
+  "name": "VicoHome",
+  "codeowners": ["@TomTje"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/TomTje/vicohome",
+  "iot_class": "cloud_polling",
+  "requirements": ["aiohttp>=3.8.0"],
+  "version": "1.0.0",
+  "icon": "icon.png",
+  "logo": "logo.png"
+}
