@@ -10,9 +10,12 @@ Custom integration for **VicoHome CG1** cloud cameras in Home Assistant.
 
 - 📹 **Motion Detection** via cloud events (no local stream)
 - 📸 **Snapshot Camera** entity showing the last motion event image
-- 📊 **Event Sensor** counting events in the last hour
+- 🖼️ **Event Image** entity for the latest event photo (downloadable)
+- 📊 **Sensors**: event count (1h), last event details, battery, signal strength, IP, firmware, status
 - 🔔 **Telegram Notifications** with photo + video (configurable)
 - ⚙️ **Runtime settings** via HA UI: notification toggle, polling interval, Telegram bot/token
+- 🎛️ **Buttons**: Manual snapshot, force refresh, restart device
+- 💾 **Persistent serial cache** — survives Home Assistant restarts
 
 ### Requirements
 
@@ -63,8 +66,18 @@ Custom integration for **VicoHome CG1** cloud cameras in Home Assistant.
 |---|---|---|
 | `sensor.vicohome_events_1h` | Sensor | Number of events in the last hour |
 | `sensor.vicohome_last_event` | Sensor | Details of the latest event (timestamp, traceId, imageUrl, videoUrl) |
-| `binary_sensor.vicohome_bewegung` | Binary | Motion detected (triggers on new event) |
+| `sensor.vicohome_battery` | Sensor | Battery level (%) |
+| `sensor.vicohome_signal` | Sensor | Wi-Fi signal strength (dBm) |
+| `sensor.vicohome_ip` | Sensor | Device IP address |
+| `sensor.vicohome_firmware` | Sensor | Firmware version |
+| `binary_sensor.vicohome_bewegung` | Binary Sensor | Motion detected (triggers on new event) |
+| `binary_sensor.vicohome_online` | Binary Sensor | Device online/offline status |
+| `binary_sensor.vicohome_event_type` | Binary Sensor | Event type indicator |
 | `camera.vicohome_camera` | Camera | Snapshot from the last event |
+| `image.vicohome_last_event` | Image | Latest event image (downloadable) |
+| `button.vicohome_snapshot` | Button | Trigger manual snapshot |
+| `button.vicohome_refresh` | Button | Force event refresh |
+| `button.vicohome_restart` | Button | Restart device |
 | `switch.vicohome_benachrichtigungen` | Switch | Telegram notifications ON/OFF |
 | `number.vicohome_aktualisierungsintervall` | Number | Polling interval (s) |
 | `text.vicohome_telegram_bot_token` | Text | Bot token (password mode) |
@@ -73,19 +86,13 @@ Custom integration for **VicoHome CG1** cloud cameras in Home Assistant.
 ### How It Works
 
 1. The coordinator periodically logs in to `api-{region}.vicohome.io` and fetches recent events.
-2. If a **new event** (new `traceId`) is found, the binary sensor flips to `on`.
-3. If notifications are enabled, it sends a Telegram message with:
+2. The device serial number is **persistently cached** — survives Home Assistant restarts.
+3. If a **new event** (new `traceId`) is found, the binary sensor flips to `on`.
+4. If notifications are enabled, it sends a Telegram message with:
    - Formatted text (device name, time, trace ID)
    - Inline photo (snapshot)
    - MP4 video (transcoded from M3U8 via ffmpeg, max 50 MB)
-4. All temporary files in `/tmp/` are cleaned up immediately after upload.
-
-### Roadmap / Ideas
-
-- [ ] Native Home Assistant camera stream support (live view)
-- [ ] HA service to manually trigger event refresh
-- [ ] Cloud-recorded playback from dashboard
-- [ ] Support for additional VicoHome camera models
+5. All temporary files in `/tmp/` are cleaned up immediately after upload.
 
 ### Troubleshooting
 
@@ -95,6 +102,19 @@ Custom integration for **VicoHome CG1** cloud cameras in Home Assistant.
 | Camera shows *Unavailable* | No motion events in the last hour — trigger motion or wait. |
 | No Telegram video received | Video might exceed 50 MB or URL expired. Lower resolution in VicoHome app or reduce polling interval. |
 | ffmpeg timeout | Ensure `/tmp` has enough space. For large M3U8 playlists, video may exceed 120 s transcoding. |
+| Entities not loading after restart | Wait for the next polling cycle — the serial cache ensures fast recovery. |
+
+### Changelog
+
+**v1.2.0** (2026-05-03)
+- 🔧 Fix: Persistent serial cache — no more "Blocking IO" warnings on restart
+- 🎛️ New: Button platform (snapshot, refresh, restart)
+- 🖼️ New: Image entity for latest event photo
+- 📊 Enhanced sensors: battery, signal, IP, firmware, online status
+- 💾 Device details survive HA restarts via local cache
+
+**v1.1.1**
+- Initial stable release with motion detection, camera snapshot, and Telegram notifications
 
 ### Contributing
 
