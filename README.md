@@ -6,6 +6,16 @@ Custom integration for **VicoHome CG1** cloud cameras in Home Assistant.
 
 > ⚠️ **Unofficial & community-driven.** This integration uses the undocumented VicoHome cloud API. VicoHome may change or restrict access at any time. Use at your own risk.
 
+### Beta Testing & Feedback 🧪
+
+We are actively looking for testers with different VicoHome models and regions.
+
+- **Found a bug?** Open an [issue](https://github.com/TomTje/vicohome-ha/issues).
+- **Want a feature?** Open a [discussion](https://github.com/TomTje/vicohome-ha/discussions).
+- **General chat:** DM `@TomTje` on GitHub.
+
+> 🔒 **Security:** All credentials (email, password, Telegram bot token) are entered **only via the Home Assistant UI** and stored in Home Assistant's encrypted internal `.storage`. **Nothing is hardcoded in this repository.**
+
 ### Features
 
 - 📹 **Motion Detection** via cloud events (no local stream)
@@ -94,6 +104,13 @@ Custom integration for **VicoHome CG1** cloud cameras in Home Assistant.
    - MP4 video (transcoded from M3U8 via ffmpeg, max 50 MB)
 5. All temporary files in `/tmp/` are cleaned up immediately after upload.
 
+### Known Limitations
+
+- **No live stream** — VicoHome cloud API does not expose a public RTSP/HTTP live stream. Only event-based snapshots and video clips.
+- **M3U8 video expiry** — Video URLs from the cloud API expire after a short window. Very old events may not have a downloadable video.
+- **Single-session VicoHome token** — Parallel logins may kick the integration out. The integration auto-reconnects, but a brief gap in polling can occur.
+- **Cloud-only** — Works only while the camera is online and connected to VicoHome servers.
+
 ### Troubleshooting
 
 | Issue | Fix |
@@ -103,6 +120,17 @@ Custom integration for **VicoHome CG1** cloud cameras in Home Assistant.
 | No Telegram video received | Video might exceed 50 MB or URL expired. Lower resolution in VicoHome app or reduce polling interval. |
 | ffmpeg timeout | Ensure `/tmp` has enough space. For large M3U8 playlists, video may exceed 120 s transcoding. |
 | Entities not loading after restart | Wait for the next polling cycle — the serial cache ensures fast recovery. |
+
+### Security & Privacy
+
+| Concern | Status |
+|---|---|
+| Hardcoded credentials | ❌ **None** — everything is user-configured via HA UI |
+| Token storage | ✅ In Home Assistant's encrypted `.storage` |
+| Network calls | 🔒 HTTPS only to `api-{region}.vicohome.io` |
+| Temporary video cache | 🗑️ Immediately deleted from `/tmp` after Telegram upload |
+
+> ⚠️ **Do not share your Home Assistant `.storage` backups publicly** — they may contain your device credentials and Telegram bot token.
 
 ### Changelog
 
@@ -115,10 +143,6 @@ Custom integration for **VicoHome CG1** cloud cameras in Home Assistant.
 
 **v1.1.1**
 - Initial stable release with motion detection, camera snapshot, and Telegram notifications
-
-### Contributing
-
-Tested on a new VicoHome model? Open an issue with model name + your region so we can expand the compatibility list.
 
 ### License
 
