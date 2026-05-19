@@ -59,7 +59,8 @@ class VicoHomeEventCountSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_event_count"
-        self._attr_name = "VicoHome Events (1h)"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "event_count"
         self._attr_native_unit_of_measurement = "events"
         self._attr_device_info = _device_info(coordinator)
 
@@ -80,7 +81,8 @@ class VicoHomeLastEventSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_last_event"
-        self._attr_name = "VicoHome Last Event"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "last_event"
         self._attr_device_info = _device_info(coordinator)
 
     @property
@@ -119,7 +121,8 @@ class VicoHomeBatterySensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_battery"
-        self._attr_name = "VicoHome Battery"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "battery"
         self._attr_native_unit_of_measurement = "%"
         self._attr_device_class = "battery"
         self._attr_device_info = _device_info(coordinator)
@@ -140,7 +143,8 @@ class VicoHomeSignalSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_signal"
-        self._attr_name = "VicoHome Signal"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "signal"
         self._attr_native_unit_of_measurement = "dBm"
         self._attr_device_class = "signal_strength"
         self._attr_device_info = _device_info(coordinator)
@@ -161,7 +165,8 @@ class VicoHomeFirmwareSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_firmware"
-        self._attr_name = "VicoHome Firmware"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "firmware"
         self._attr_device_info = _device_info(coordinator)
 
     @property
@@ -180,7 +185,8 @@ class VicoHomeResolutionSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_resolution"
-        self._attr_name = "VicoHome Resolution"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "resolution"
         self._attr_device_info = _device_info(coordinator)
 
     @property
@@ -199,7 +205,8 @@ class VicoHomeIpSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_ip"
-        self._attr_name = "VicoHome IP"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "ip"
         self._attr_device_info = _device_info(coordinator)
 
     @property
@@ -218,7 +225,8 @@ class VicoHomeWakeTimeSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_wake_time"
-        self._attr_name = "VicoHome Wake Time"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "wake_time"
         self._attr_device_class = "timestamp"
         self._attr_device_info = _device_info(coordinator)
 
@@ -241,7 +249,8 @@ class VicoHomeStatusTextSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_status_text"
-        self._attr_name = "VicoHome Status"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "status_text"
         self._attr_device_info = _device_info(coordinator)
 
     @property
@@ -260,7 +269,8 @@ class VicoHomeWifiModeSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_wifi_mode"
-        self._attr_name = "VicoHome WiFi Mode"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "wifi_mode"
         self._attr_device_info = _device_info(coordinator)
 
     @property
@@ -281,7 +291,8 @@ class VicoHomeLocationSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_location"
-        self._attr_name = "VicoHome Location"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "location"
         self._attr_device_info = _device_info(coordinator)
 
     @property
@@ -300,7 +311,8 @@ class VicoHomeMacSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_mac"
-        self._attr_name = "VicoHome MAC"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "mac"
         self._attr_device_info = _device_info(coordinator)
 
     @property
@@ -319,7 +331,8 @@ class VicoHomeModelSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_model"
-        self._attr_name = "VicoHome Model"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "model"
         self._attr_device_info = _device_info(coordinator)
 
     @property
@@ -338,7 +351,8 @@ class VicoHomeHomeNameSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_home_name"
-        self._attr_name = "VicoHome Home"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "home_name"
         self._attr_device_info = _device_info(coordinator)
 
     @property
@@ -357,7 +371,8 @@ class VicoHomeActivationSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_activated"
-        self._attr_name = "VicoHome Activated"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "activated"
         self._attr_device_class = "timestamp"
         self._attr_device_info = _device_info(coordinator)
 
@@ -380,7 +395,8 @@ class VicoHomeDeviceStatusSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_device_status"
-        self._attr_name = "VicoHome Device Status"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "device_status"
         self._attr_device_info = _device_info(coordinator)
 
     @property
@@ -399,7 +415,8 @@ class VicoHomeWhiteLightSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_white_light"
-        self._attr_name = "VicoHome White Light"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "white_light"
         self._attr_device_info = _device_info(coordinator)
 
     @property
@@ -418,7 +435,8 @@ class VicoHomeWifiChannelSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_wifi_channel"
-        self._attr_name = "VicoHome WiFi Channel"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "wifi_channel"
         self._attr_device_info = _device_info(coordinator)
 
     @property
@@ -437,7 +455,8 @@ class VicoHomeMcuSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_mcu"
-        self._attr_name = "VicoHome MCU"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "mcu"
         self._attr_device_info = _device_info(coordinator)
 
     @property
@@ -456,7 +475,8 @@ class VicoHomeRoleSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_role"
-        self._attr_name = "VicoHome Role"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "role"
         self._attr_device_info = _device_info(coordinator)
 
     @property
@@ -475,7 +495,8 @@ class VicoHomeTimezoneSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_timezone"
-        self._attr_name = "VicoHome Timezone"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "timezone"
         self._attr_device_info = _device_info(coordinator)
 
     @property

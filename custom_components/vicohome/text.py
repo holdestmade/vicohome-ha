@@ -26,7 +26,8 @@ class VicoHomeTelegramBot(CoordinatorEntity, TextEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_telegram_bot"
-        self._attr_name = "VicoHome Telegram Bot Token"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "telegram_bot"
         self._attr_icon = "mdi:robot"
         self._attr_mode = "password"
         self._attr_device_info = DeviceInfo(
@@ -52,7 +53,8 @@ class VicoHomeTelegramChat(CoordinatorEntity, TextEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_telegram_chat"
-        self._attr_name = "VicoHome Telegram Empfänger-ID"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "telegram_chat"
         self._attr_icon = "mdi:send"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, coordinator.email)},

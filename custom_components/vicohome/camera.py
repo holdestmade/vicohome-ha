@@ -36,7 +36,8 @@ class VicoHomeCamera(CoordinatorEntity, Camera):
         Camera.__init__(self)
         self._webrtc_provider = None
         self._attr_unique_id = f"{coordinator.email}_camera"
-        self._attr_name = "VicoHome Camera"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "camera"
         self._attr_is_streaming = False
         self._attr_is_recording = False
         self._attr_device_info = _device_info(coordinator)
