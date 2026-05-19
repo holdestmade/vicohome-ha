@@ -43,7 +43,7 @@ class VicoHomeVideoButton(CoordinatorEntity, ButtonEntity):
         events = self.coordinator.data.get("events", [])
         hass = self.hass
         if not events:
-            hass.services.async_call(
+            await hass.services.async_call(
                 "persistent_notification",
                 "create",
                 {
@@ -61,7 +61,7 @@ class VicoHomeVideoButton(CoordinatorEntity, ButtonEntity):
         trace_id = ev.get("traceId", "n/a")
 
         if not video_url:
-            hass.services.async_call(
+            await hass.services.async_call(
                 "persistent_notification",
                 "create",
                 {
@@ -78,7 +78,7 @@ class VicoHomeVideoButton(CoordinatorEntity, ButtonEntity):
             f"🆔 Trace: `{trace_id}`"
         )
 
-        hass.services.async_call(
+        await hass.services.async_call(
             "persistent_notification",
             "create",
             {
