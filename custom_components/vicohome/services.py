@@ -9,8 +9,8 @@ import voluptuous as vol
 from .const import DOMAIN
 from .coordinator import VicoHomeCoordinator
 
-# Keine eigenen Services nötig – alles über Entities steuerbar via HA Automationen
-# Diese Datei kann später erweitert werden (z.B. manueller Event-Refresh)
+# No custom services needed - everything is controllable via entities in HA automations
+# This file can be extended later (e.g. a manual event refresh)
 
 SERVICES = {}
 

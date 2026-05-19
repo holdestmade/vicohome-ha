@@ -34,7 +34,8 @@ class VicoHomeImage(CoordinatorEntity, ImageEntity):
         CoordinatorEntity.__init__(self, coordinator)
         ImageEntity.__init__(self, coordinator.hass)
         self._attr_unique_id = f"{coordinator.email}_image"
-        self._attr_name = "VicoHome Letztes Bild"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "image"
         self._attr_device_info = _device_info(coordinator)
         self._attr_content_type = "image/jpeg"
 

@@ -1,0 +1,80 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "VicoHome einrichten",
+        "description": "Verbinde dein VicoHome-Konto mit Home Assistant.",
+        "data": {
+          "email": "E-Mail",
+          "password": "Passwort",
+          "region": "Region",
+          "polling_interval": "Aktualisierungsintervall (Sekunden)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Verbindung fehlgeschlagen. Bitte prüfe deine Anmeldedaten."
+    },
+    "abort": {
+      "already_configured": "Dieses Konto ist bereits konfiguriert."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "event_count": { "name": "Ereignisse (1 Std.)" },
+      "last_event": { "name": "Letztes Ereignis" },
+      "battery": { "name": "Batterie" },
+      "signal": { "name": "Signal" },
+      "firmware": { "name": "Firmware" },
+      "resolution": { "name": "Auflösung" },
+      "ip": { "name": "IP-Adresse" },
+      "wake_time": { "name": "Aufwachzeit" },
+      "status_text": { "name": "Status" },
+      "wifi_mode": { "name": "WLAN-Modus" },
+      "location": { "name": "Standort" },
+      "mac": { "name": "MAC-Adresse" },
+      "model": { "name": "Modell" },
+      "home_name": { "name": "Zuhause" },
+      "activated": { "name": "Aktiviert" },
+      "device_status": { "name": "Gerätestatus" },
+      "white_light": { "name": "Weißlicht" },
+      "wifi_channel": { "name": "WLAN-Kanal" },
+      "mcu": { "name": "MCU-Firmware" },
+      "role": { "name": "Rolle" },
+      "timezone": { "name": "Zeitzone" }
+    },
+    "binary_sensor": {
+      "motion": { "name": "Bewegung" },
+      "online": { "name": "Online" },
+      "charging": { "name": "Lädt" },
+      "awake": { "name": "Wach" },
+      "recording_audio": { "name": "Audioaufnahme" },
+      "live_audio": { "name": "Live-Audio" },
+      "alarm_remove": { "name": "Alarm bei Entfernung" },
+      "ota_awake": { "name": "OTA-Update beim Aufwachen" },
+      "activated": { "name": "Aktiviert" },
+      "dormancy_plan": { "name": "Schlafplan" },
+      "sd_card": { "name": "SD-Karte" },
+      "firmware_current": { "name": "Firmware aktuell" }
+    },
+    "switch": {
+      "notifications": { "name": "Benachrichtigungen" }
+    },
+    "button": {
+      "video": { "name": "Video öffnen" }
+    },
+    "number": {
+      "polling_interval": { "name": "Aktualisierungsintervall" }
+    },
+    "text": {
+      "telegram_bot": { "name": "Telegram-Bot-Token" },
+      "telegram_chat": { "name": "Telegram-Empfänger-ID" }
+    },
+    "camera": {
+      "camera": { "name": "Kamera" }
+    },
+    "image": {
+      "image": { "name": "Letztes Bild" }
+    }
+  }
+}

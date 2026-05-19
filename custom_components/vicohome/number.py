@@ -28,7 +28,8 @@ class VicoHomePollingInterval(CoordinatorEntity, NumberEntity):
     def __init__(self, coordinator: VicoHomeCoordinator):
         super().__init__(coordinator)
         self._attr_unique_id = f"{coordinator.email}_polling_interval"
-        self._attr_name = "VicoHome Aktualisierungsintervall"
+        self._attr_has_entity_name = True
+        self._attr_translation_key = "polling_interval"
         self._attr_icon = "mdi:timer"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, coordinator.email)},
